@@ -1,75 +1,121 @@
-function HashStorageFunc(){
-    var self = this;
-    var mainStorage = {};
+"use strict"
 
-    // ADD VALUE
-    self.addValue = function (key, value){
-        mainStorage[key] = value;
+var formDef1=
+[
+  {label:'Название сайта:',kind:'longtext',name:'sitename'},
+  {label:'URL сайта:',kind:'longtext',name:'siteurl'},
+  {label:'Посетителей в сутки:',kind:'number',name:'visitors'},
+  {label:'E-mail для связи:',kind:'shorttext',name:'email'},
+  {label:'Рубрика каталога:',kind:'combo',name:'division',
+    variants:[{text:'здоровье',value:1},{text:'домашний уют',value:2},{text:'бытовая техника',value:3}]},
+  {label:'Размещение:',kind:'radio',name:'payment',
+    variants:[{text:'бесплатное',value:1},{text:'платное',value:2},{text:'VIP',value:3}]},
+  {label:'Разрешить отзывы:',kind:'check',name:'votes'},
+  {label:'Описание сайта:',kind:'memo',name:'description'},
+  {caption:'Опубликовать',kind:'submit'},
+];
+
+var formDef2=
+[
+  {label:'Фамилия:',kind:'longtext',name:'lastname'},
+  {label:'Имя:',kind:'longtext',name:'firstname'},
+  {label:'Отчество:',kind:'longtext',name:'secondname'},
+  {label:'Возраст:',kind:'number',name:'age'},
+  {caption:'Зарегистрироваться',kind:'submit'},
+];
+
+function appendElement(parent, element){
+    if (element.kind !== "submit"){
+        let caption = document.createTextNode(element.label);
+        parent.appendChild(caption);
     }
+    let item;
+    switch (element.kind){
+        case 'longtext':
+            item = document.createElement("input");
+            item.name = element.name;
+            item.style.width = "453px";
+            break;
+        case 'number':
+            item = document.createElement("input");
+            item.name = element.name;
+            item.style.width = "80px";
+            break;
+        case 'shorttext':
+            item = document.createElement("input");
+            item.name = element.name;
+            item.style.width = "200px";
+            break;
+        case 'combo':
+            item = document.createElement("select");
+            item.name = element.name;
+            for (let i = 0; i < element.variants.length; i++){
+                let option = document.createElement("option");
+                option.value = element.variants[i].text;
+                
+                let optionCaption = document.createTextNode(element.variants[i].text);
+                option.appendChild(optionCaption);
+                
+                item.appendChild(option);
+            }
+            item.selectedIndex = 2;
+            break;
+        case 'radio':
+            for (let i = 0; i < element.variants.length; i++){
+                item = document.createElement("label");
+                
+                let radio = document.createElement("input");
+                radio.type = "radio";
+                radio.name = element.name;
+                radio.value = element.variants[i].text;
+
+                item.appendChild(radio);
+                item.appendChild(document.createTextNode(element.variants[i].text));
+                
+                parent.appendChild(item);
+            }
+            break;
+        case 'check':
+            item = document.createElement("input");
+            item.type = 'checkbox';
+            item.name = element.name;
+            item.checked = "checked";
+            break; 
+        case 'memo':
+            parent.appendChild(document.createElement("br"));
+            item = document.createElement("textarea");
+            item.name = element.name;
+            break; 
+        case 'submit':
+            item = document.createElement("button");
+            item.type = 'submit';
+            item.name = element.caption;
+            item.appendChild(document.createTextNode(element.caption));
+            break; 
+        default:
+            item = document.createElement("input");
+            break;
+    }
+    parent.appendChild(item);
+    parent.appendChild(document.createElement("br"));
+}
+
+function buildForm(formDefenition){
+    let formContainer = document.createElement("div");
     
-    // GET VALUE
-    self.getValue = function(key){
-        if (key in mainStorage)
-            return mainStorage[key];
-        else
-            return undefined;
+    let form = document.createElement("form");
+    form.action = "https://fe.it-academy.by/TestForm.php";
+    formContainer.appendChild(form);
+
+    for (let element in formDefenition){
+        appendElement(form, formDefenition[element]);
     }
 
-    // DELETE VALUE
-    self.deleteValue = function(key){
-        if (key in mainStorage){
-            delete mainStorage[key];
-            return true;
-        }
-        return false;
-    }
 
-    // GET KEYS
-    self.getKeys = function(){
-        // let bufferArray = [];
-        // for (let item in mainStorage){
-        //     bufferArray.push(item);
-        // }
-        // return bufferArray;
-
-        return Object.keys(mainStorage);
-    }
+    document.body.appendChild(formContainer);
 }
 
-let drinkStorage = new HashStorageFunc();
-
-function addValue(){
-    let name = prompt("Введите название напитка: ");
-    let productInfo = {};
-    productInfo.alcochol = confirm("Является ли напиток алкогольным?\nОК - да, Отмена - нет");
-    let recipe = prompt("Введите рецепт напитка: ");
-    productInfo.recipe = recipe;
-    drinkStorage.addValue(name, productInfo);
-    console.log("Успешно добавлено!");
-}
-
-function getValue(){
-    let keyName = prompt("Введите название продукта, о котором хотите получить информацию:");
-    let productInformation = drinkStorage.getValue(keyName);
-    if (productInformation !== undefined){
-        if (productInformation.alcochol) productInformation.alcochol = "Да"
-        else productInformation.alcochol = "Нет"
-        console.log("Название: " + keyName +
-                    "\nАлкогольный: " + productInformation.alcochol + 
-                    "\nРецепт: " + productInformation.recipe);
-    }
-    else
-        console.log("Такого продукта не существует.");
-}
-
-function deleteValue(){
-    let key = prompt("Введите название продукта, который хотите удалить: ");
-    if (drinkStorage.deleteValue(key))
-        console.log("Продукт успешно удалён.");
-    else
-        console.log("Продукт с заданным именем отсутствует.");
-}
-
-function getKeys(){
-    console.log(drinkStorage.getKeys());
-}
+buildForm(formDef1);
+for (let i = 0; i < 5; i++)
+    document.body.appendChild(document.createElement('br'));
+buildForm(formDef2);

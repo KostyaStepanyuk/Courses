@@ -1,0 +1,23 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.article{
+    .article-header{
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    .input-buttons{
+        display: flex;
+        gap: 10px;
+        button{
+            padding: 10px;
+            font-size: 1.3rem;
+        }
+    }
+}

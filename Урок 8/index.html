@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>VALID_FORM</title>
+</head>
+<body>
+    <form action="https://fe.it-academy.by/TestForm.php">
+        <label for="developers">Разработчики:</label>
+        <input type="text" name="developers" id="developers"><br>
+
+        <label for="sitename">Название сайта:</label>
+        <input type="text" name="sitename" id="sitename"><br>
+
+        <label for="siteurl">URL сайта:</label>
+        <input type="text" name="siteurl" id="siteurl"><br>
+
+        <label for="sitestartdate">Дата запуска сайта:</label>
+        <input type="date" name="sitestartdate" id="sitestartdate"><br>
+
+        <label for="sitevisitors">Посетителей в сутки:</label>
+        <input type="text" name="sitevisitors" id="sitevisitors"><br>
+
+        <label for="email">E-mail для связи:</label>
+        <input type="text" name="email" id="email"><br>
+
+        <label for="heading">Рубрика каталога:</label>
+        <select name="heading" id="heading">
+            <option value="1">Здоровье</option>
+            <option value="2">Домашний уют</option>
+            <option value="3">Бытовая техника</option>
+        </select><br>
+
+        <label for="radio-group">Размещение:</label>
+        <div class="radio-group">
+            <input type="radio" name="value" id="free">
+            <label for="free">Бесплатное</label>
+            <input type="radio" name="value" id="pay">
+            <label for="pay">Платное</label>
+            <input type="radio" name="value" id="vip">
+            <label for="vip">VIP</label>
+        </div><br>
+
+        <label for="review">Разрешить отзывы:</label>
+        <input type="checkbox" name="review" id="review"><br>
+
+        <label for="sitedescription">Описание сайта:</label><br>
+        <textarea name="sitedescription" id="sitedescription" cols="75" rows="3"></textarea><br>
+
+        <input type="submit" value="Опубликовать">
+    </form>
+
+    <script src="script.js"></script>
+</body>
+</html>

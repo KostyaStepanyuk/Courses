@@ -51,7 +51,7 @@ function isShort(target){
     return false;
 }
 
-function isWrong(target){
+function isNegative(target){
     if (target.type === "number" && target.value < 0){
         createError(target.id, "Значение данного поля не должно быть отрицательным.");
         return true;
@@ -71,11 +71,11 @@ function validateItem(targetIdentifier){
         }
     let target = document.getElementById(targetIdentifier);
     
-    if (isEmpty(target)) return false;
+    if (isEmpty(target)) return false; // не может быть пустым
 
-    if (isShort(target)) return false;
+    if (isShort(target)) return false; // не может быть короче 5 символов
 
-    if (isWrong(target)) return false;
+    if (isNegative(target)) return false; // не может быть меньше 0
 
     removeError(target.id);
     return true;
@@ -95,12 +95,18 @@ function validate(){
 function submit(EO){
     EO = EO || window.event;
     EO.preventDefault();
-    let formValid = true;
+    let formValid = true,
+        firstWrongField = -1;
     for (let i = 0; i < document.forms[0].elements.length - 1; i++){
-        if (!validateItem(document.forms[0].elements[i].id))
+        if (!validateItem(document.forms[0].elements[i].id)){
             formValid = false;
+            if (firstWrongField === -1) firstWrongField = document.forms[0].elements[i];
+        }
     }
     if (formValid) document.forms[0].submit();
+    else {
+        firstWrongField.focus();
+    }
 }
 
 document.forms[0].addEventListener('submit', submit);

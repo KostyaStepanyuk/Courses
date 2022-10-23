@@ -1,3 +1,5 @@
+const form = document.forms[0];
+
 function createError(targetIdentifier, errorMessage = "Данное поле должно быть заполнено!"){
     removeError(targetIdentifier);
     let errorBox = document.createElement("div");
@@ -27,7 +29,7 @@ function getEventElement(eo) {
 }
 
 function getRadioValue(radioName) {
-    return document.forms[0].elements[radioName].value;
+    return form.elements[radioName].value;
   }
 
 function isEmpty(target){
@@ -101,13 +103,13 @@ function validateField(EO){
 }
 
 function applyEventListeners(){
-    for (let i = 0; i < document.forms[0].elements.length - 1; i++){
-        if (document.forms[0].elements[i].type === "radio" ||
-            document.forms[0].elements[i].type === "checkbox" ||
-            document.forms[0].elements[i].type === "select-one"){
-                document.forms[0].elements[i].addEventListener('change',validateField,false);
+    for (let i = 0; i < form.elements.length - 1; i++){
+        if (form.elements[i].type === "radio" ||
+            form.elements[i].type === "checkbox" ||
+            form.elements[i].type === "select-one"){
+                form.elements[i].addEventListener('change',validateField,false);
             }
-        else document.forms[0].elements[i].addEventListener('blur',validateField,false);
+        else form.elements[i].addEventListener('blur',validateField,false);
     }
 }
 
@@ -116,18 +118,18 @@ function submit(EO){
     EO.preventDefault();
     let formValid = true,
         firstWrongField = -1;
-    for (let i = 0; i < document.forms[0].elements.length - 1; i++){
-        if (!validateItem(document.forms[0].elements[i].id)){
+    for (let i = 0; i < form.elements.length - 1; i++){
+        if (!validateItem(form.elements[i].id)){
             formValid = false;
-            if (firstWrongField === -1) firstWrongField = document.forms[0].elements[i];
+            if (firstWrongField === -1) firstWrongField = form.elements[i];
         }
     }
-    if (formValid) document.forms[0].submit();
+    if (formValid) form.submit();
     else {
         firstWrongField.focus();
     }
 }
 
-document.forms[0].addEventListener('submit', submit);
+form.addEventListener('submit', submit);
 
 applyEventListeners();

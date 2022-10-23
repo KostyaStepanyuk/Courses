@@ -18,16 +18,6 @@ function removeError(targetIdentifier){
     }
 }
 
-function getEventElement(eo) {
-  if ( window.event && window.event.srcElement )
-    return window.event.srcElement;
-
-  if ( eo.target )
-    return eo.target;
-
-  return null;
-}
-
 function getRadioValue(radioName) {
     return form.elements[radioName].value;
   }

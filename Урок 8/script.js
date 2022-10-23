@@ -60,6 +60,7 @@ function isDefaultValue(target){
         createError(target.id, "Данное значение недопустимо.");
         return true;
     }
+    
     return false;
 }
 

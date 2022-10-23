@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=UTF-8>
+    <title>drag&amp;drop</title>
+</head>
+<body style='min-height: 100vh'>
+    <img src='http://fe.it-academy.by/Sites/0000007/sax.jpg'>
+    <img src='http://fe.it-academy.by/Sites/0000007/Yin_and_Yang.png' width=100>
+    <img src='http://fe.it-academy.by/Sites/0000007/Man-and-woman.png' width=150>
+    <img src='http://fe.it-academy.by/Sites/0000007/No_smoking.png' style='padding-left: 50px'>
+
+    <script>
+        window.addEventListener('load', getImagesPositions);
+        
+        let imagesPositions = {};
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        let oldZIndex;
+        let elmnt
+        function imageMouseDown(EO){
+            EO = EO || window.event;
+            pos3 = EO.clientX;
+            pos4 = EO.clientY;
+            document.onmouseup = imageMouseUp;
+            document.onmousemove = imageMouseMove;
+            oldZIndex = EO.target.style.zIndex;
+        }
+
+        function imageMouseMove(EO){
+            EO = EO || window.event;
+            EO.preventDefault();
+            EO.target.style.zIndex = 9999;
+
+            pos1 = pos3 - EO.clientX;
+            pos2 = pos4 - EO.clientY;
+            pos3 = EO.clientX;
+            pos4 = EO.clientY;
+
+            EO.target.style.top = (EO.target.offsetTop - pos2) + "px";
+            EO.target.style.left = (EO.target.offsetLeft - pos1) + "px";
+        }
+
+        function imageMouseUp(EO){
+            EO.target.style.zIndex = oldZIndex;
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+
+        function getImagesPositions(){
+            for (let i = 0; i < document.images.length; i++){
+                let coordinates = {};
+                coordinates['left'] = document.images[i].getBoundingClientRect().x;
+                coordinates['top'] = document.images[i].getBoundingClientRect().y;
+                imagesPositions[i] = coordinates;
+            }
+            for (let i = 0; i < document.images.length; i++){
+                document.images[i].style.position = 'absolute';
+                document.images[i].style.left = imagesPositions[i].left + 'px';
+                document.images[i].style.top = imagesPositions[i].top + 'px';
+                document.images[i].addEventListener('mousedown', imageMouseDown, false);
+            }
+        }
+
+
+    </script>
+
+</body>
+</html>

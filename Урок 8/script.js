@@ -1,12 +1,12 @@
 function createError(targetIdentifier, errorMessage = "Данное поле должно быть заполнено!"){
     removeError(targetIdentifier);
     let errorBox = document.createElement("div");
-    errorBox.style.cssText = 'position: absolute; background-color: red; padding: 3px;';
+    errorBox.style.cssText = 'position: absolute; background-color: red; padding: 2px;';
     errorBox.id = targetIdentifier + "-error";
     errorBox.innerText = errorMessage;
     let buff = document.getElementById(targetIdentifier);
     errorBox.style.left = buff.offsetLeft + buff.offsetWidth + 10 + "px";
-    errorBox.style.top = buff.offsetTop + "px";
+    errorBox.style.top = buff.offsetTop - 1 + "px";
     document.body.appendChild(errorBox);
 }
 
@@ -59,6 +59,18 @@ function isNegative(target){
     return false;
 }
 
+function isDefaultValue(target){
+    if (target.type === "select-one" && target.value === "1"){
+        createError(target.id, "Данное значение недопустимо.");
+        return true;
+    }
+    if (target.type === "checkbox" && target.checked === false){
+        createError(target.id, "Данное значение недопустимо.");
+        return true;
+    }
+    return false;
+}
+
 function validateItem(targetIdentifier){
     if (targetIdentifier === "free" || targetIdentifier === "pay" || targetIdentifier === "vip")
         if (getRadioValue("values") !== 'on'){
@@ -77,6 +89,8 @@ function validateItem(targetIdentifier){
 
     if (isNegative(target)) return false; // не может быть меньше 0
 
+    if (isDefaultValue(target)) return false; // не может иметь начальное значение
+
     removeError(target.id);
     return true;
 }
@@ -86,9 +100,14 @@ function validateField(EO){
     validateItem(EO.target.id);
 }
 
-function validate(){
+function applyEventListeners(){
     for (let i = 0; i < document.forms[0].elements.length - 1; i++){
-        document.forms[0].elements[i].addEventListener('blur',validateField,false);
+        if (document.forms[0].elements[i].type === "radio" ||
+            document.forms[0].elements[i].type === "checkbox" ||
+            document.forms[0].elements[i].type === "select-one"){
+                document.forms[0].elements[i].addEventListener('change',validateField,false);
+            }
+        else document.forms[0].elements[i].addEventListener('blur',validateField,false);
     }
 }
 
@@ -111,4 +130,4 @@ function submit(EO){
 
 document.forms[0].addEventListener('submit', submit);
 
-validate();
+applyEventListeners();

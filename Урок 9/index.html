@@ -11,11 +11,12 @@
     <img src='http://fe.it-academy.by/Sites/0000007/No_smoking.png' style='padding-left: 50px'>
 
     <script>
-        window.addEventListener('load', getImagesPositions);
+        window.addEventListener('load', setUpImages);
         
         let imagesPositions = {};
+        let movingImage;
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-        let oldZIndex;
+        let zIndex = 10;
         let elmnt
 
         function imageMouseDown(EO){
@@ -26,31 +27,32 @@
             document.onmousemove = imageMouseMove;
             oldZIndex = EO.target.style.zIndex;
             EO.target.style.cursor = "-webkit-grab";
+            movingImage = EO.target;
+            movingImage.style.zIndex = zIndex++;
         }
 
         function imageMouseMove(EO){
             EO = EO || window.event;
             EO.preventDefault();
-            EO.target.style.zIndex = 9999;
-            EO.target.style.cursor = "-webkit-grabbing";
+            movingImage.style.cursor = "-webkit-grabbing";
             pos1 = pos3 - EO.clientX;
             pos2 = pos4 - EO.clientY;
             
             pos3 = EO.clientX;
             pos4 = EO.clientY;
 
-            EO.target.style.top = (EO.target.offsetTop - pos2) + "px";
-            EO.target.style.left = (EO.target.offsetLeft - pos1) + "px";
+            movingImage.style.top = (movingImage.offsetTop - pos2) + "px";
+            movingImage.style.left = (movingImage.offsetLeft - pos1) + "px";
         }
 
         function imageMouseUp(EO){
-            EO.target.style.zIndex = oldZIndex;
-            EO.target.style.cursor = "-webkit-grab";
+            movingImage.style.cursor = "-webkit-grab";
             document.onmouseup = null;
             document.onmousemove = null;
+            movingImage = null;
         }
 
-        function getImagesPositions(){
+        function setUpImages(){
             for (let i = 0; i < document.images.length; i++){
                 let coordinates = {};
                 coordinates['left'] = document.images[i].getBoundingClientRect().x;

@@ -17,6 +17,7 @@
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
         let oldZIndex;
         let elmnt
+
         function imageMouseDown(EO){
             EO = EO || window.event;
             pos3 = EO.clientX;
@@ -24,15 +25,17 @@
             document.onmouseup = imageMouseUp;
             document.onmousemove = imageMouseMove;
             oldZIndex = EO.target.style.zIndex;
+            EO.target.style.cursor = "-webkit-grab";
         }
 
         function imageMouseMove(EO){
             EO = EO || window.event;
             EO.preventDefault();
             EO.target.style.zIndex = 9999;
-
+            EO.target.style.cursor = "-webkit-grabbing";
             pos1 = pos3 - EO.clientX;
             pos2 = pos4 - EO.clientY;
+            
             pos3 = EO.clientX;
             pos4 = EO.clientY;
 
@@ -42,6 +45,7 @@
 
         function imageMouseUp(EO){
             EO.target.style.zIndex = oldZIndex;
+            EO.target.style.cursor = "-webkit-grab";
             document.onmouseup = null;
             document.onmousemove = null;
         }
@@ -58,6 +62,7 @@
                 document.images[i].style.left = imagesPositions[i].left + 'px';
                 document.images[i].style.top = imagesPositions[i].top + 'px';
                 document.images[i].addEventListener('mousedown', imageMouseDown, false);
+                document.images[i].style.cursor = "-webkit-grab";
             }
         }
 

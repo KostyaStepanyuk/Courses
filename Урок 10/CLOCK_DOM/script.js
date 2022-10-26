@@ -100,7 +100,6 @@ function createClock(){
     currentTimeNumeric.id = "currentTimeNumeric";
 
     updateClock();
-    setInterval(updateClock, 1000);
 }
 
 function updateClock() {
@@ -110,6 +109,7 @@ function updateClock() {
     const hours = currentTime.getHours();
     const minutes = currentTime.getMinutes();
     const seconds = currentTime.getSeconds();
+    const milliseconds = currentTime.getMilliseconds();
 
     // Обновляем числовое значение времени
     let currentTimeNumeric = document.getElementById("currentTimeNumeric");
@@ -118,13 +118,14 @@ function updateClock() {
     currentTimeNumeric.style.left = document.getElementById("clockElement").offsetWidth / 2 - currentTimeNumeric.offsetWidth / 2 + "px";
 
     
-    
+    // Поворачиваем секундную стрелку
     let secondHand = document.getElementById("secondHand");
     // Каждую секунду секундная стрелка должна быть повернута на угол в 
     // (360 / 60 * секунды) градусов
     const degreesForSecond = 6 * seconds;
     secondHand.style.transform = "rotate(" + degreesForSecond + "deg)";
 
+    // Поворачиваем минутную стрелку
     let minuteHand = document.getElementById("minuteHand");
     // Каждую секунду минутная стрелка должна быть повернута на угол в
     // (360 / 60 * минуты + (секунды / 60) * 360 / 60) градусов
@@ -132,6 +133,7 @@ function updateClock() {
     const degreesForMinute = 6 * minutes + (seconds / 60) * 6;
     minuteHand.style.transform = "rotate(" + degreesForMinute + "deg)";
 
+    // Поворачиваем часовую стрелку
     let hourHand = document.getElementById("hourHand");
     const degreesForHour = hours * 360 / 12 + (minutes * (30 / 60));
     // Каждую секунду часовая стрелка должна быть повернута на угол в
@@ -139,5 +141,6 @@ function updateClock() {
     // (минуты / (60 / 30)) - на сколько градусов минутная стрелка сдвигает часовую в данный момент
     // 30 / 60 - на сколько градусов минутная стрелка сдвигает часовую каждую минуту
     hourHand.style.transform = "rotate(" + degreesForHour + "deg)";
-}
 
+    setTimeout(updateClock, 1000 - milliseconds);
+}

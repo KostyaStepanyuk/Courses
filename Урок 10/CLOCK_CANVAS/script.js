@@ -1,22 +1,39 @@
 "use strict";
-function createClock(){
+
+function createCanvas(clockDiameter){
     // Удаляем старые часы, если такие были
     let oldCanvas = document.getElementById("canvas");
     if (oldCanvas){
         document.body.removeChild(oldCanvas);
     }
 
-    let clockDiameter = document.getElementById("clockDiameter").value; // Диаметр часов
-    let clockRadius = clockDiameter / 2; // Радиус часов
     // Создаём новый canvas
     let canvas = document.createElement("canvas");
     canvas.id = "canvas";
     canvas.width = clockDiameter;
     canvas.height = clockDiameter;
-    let context = canvas.getContext('2d');
+    document.body.appendChild(canvas);
+    return canvas;
+};
+
+function createClock(){
+    let clockDiameter = document.getElementById("clockDiameter").value; // Диаметр часов
+    let clockRadius = clockDiameter / 2; // Радиус часов
     
+
+    let canvas = document.getElementById("canvas");
+    let context;
+    if (!canvas) canvas = createCanvas(clockDiameter);
+    else{
+        context = canvas.getContext('2d');
+        context.strokeStyle = 'white';
+        context.fillStyle = 'rgb(255,255,255)';
+        context.strokeRect(0.5, 0.5, clockDiameter - 0.5, clockDiameter - 0.5);
+        context.fillRect(0.5, 0.5, clockDiameter - 0.5, clockDiameter - 0.5);
+    }
+
     // Создаём новые часы
-    
+    context = canvas.getContext('2d');
     context.strokeStyle = 'orange';
     context.fillStyle = 'orange';
     context.beginPath();
@@ -107,6 +124,5 @@ function createClock(){
     context.font='italic bold 28px Arial';
     context.fillText(hours + ":" + minutes + ":" + ("0" + seconds).slice(-2), centerX - clockRadius / 4, centerY - clockRadius / 3);
 
-    document.body.appendChild(canvas);
     setTimeout(createClock, 1000 - milliseconds);
 }

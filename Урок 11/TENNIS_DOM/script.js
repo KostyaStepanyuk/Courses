@@ -163,12 +163,14 @@ function generateBallAngle(){
 }
 
 function restartGame(){
-    createBall();
-    createRackets();
-    readEntities();
-    ballParameters.speedX = 3;
-    generateBallAngle();
-    isGameOn = true;
+    if (!isGameOn){
+        createBall();
+        createRackets();
+        readEntities();
+        ballParameters.speedX = 3;
+        generateBallAngle();
+        isGameOn = true;
+    }
 }
 
 function checkStates(){

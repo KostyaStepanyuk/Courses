@@ -60,6 +60,7 @@ function setEntities(){
     createRackets();
     readEntities();
     createScore();
+    changePositions();
     
     window.addEventListener('keydown', moveRacket, false);
     window.addEventListener('keyup', moveRacket, false);
@@ -161,25 +162,16 @@ function generateBallAngle(){
     if (buff > 0.5) ballParameters.speedX = -ballParameters.speedX;
 }
 
-function changePositions(){
-    
-    if (!isGameOn){
-        createBall();
-        createRackets();
-        readEntities();
-        isGameOn = true;
-        ballParameters.speedX = 3;
-        generateBallAngle();
-    }
+function restartGame(){
+    createBall();
+    createRackets();
+    readEntities();
+    ballParameters.speedX = 3;
+    generateBallAngle();
+    isGameOn = true;
+}
 
-    ballParameters.posX += ballParameters.speedX;
-    ballParameters.posY += ballParameters.speedY;
-
-    racketsParameters.left.posY += racketsParameters.left.speedY;
-    racketsParameters.left.update();
-    racketsParameters.right.posY += racketsParameters.right.speedY;
-    racketsParameters.right.update();
-
+function checkStates(){
     // вышла ли левая платформа выше границы поля?
     if (racketsParameters.left.posY < 0){
         racketsParameters.left.speedY = 0;
@@ -190,7 +182,6 @@ function changePositions(){
         racketsParameters.left.speedY = 0;
         racketsParameters.left.posY = fieldParameters.height - racketsParameters.height;
     }
-
     // вышла ли правая платформа выше границы поля?
     if (racketsParameters.right.posY < 0){
         racketsParameters.right.speedY = 0;
@@ -201,7 +192,6 @@ function changePositions(){
         racketsParameters.right.speedY = 0;
         racketsParameters.right.posY = fieldParameters.height - racketsParameters.height;
     }
-
     // коснулся ли мяч левой платформы?
     if (ballParameters.posX <= racketsParameters.width 
      && ballParameters.posY + ballParameters.height / 2 >= racketsParameters.left.posY 
@@ -209,7 +199,6 @@ function changePositions(){
         ballParameters.speedX =- ballParameters.speedX;
         ballParameters.posX = racketsParameters.width;
     }
-
     // коснулся ли мяч правой платформы?
     if (ballParameters.posX + ballParameters.width >= fieldParameters.width - racketsParameters.width 
         && ballParameters.posY + ballParameters.height / 2 >= racketsParameters.right.posY 
@@ -217,35 +206,44 @@ function changePositions(){
            ballParameters.speedX =- ballParameters.speedX;
            ballParameters.posX = fieldParameters.width - racketsParameters.width - ballParameters.width;
        }
-
     // вылетел ли мяч левее стены?
     if (ballParameters.posX < 0) {
         ballParameters.speedX = 0;
         ballParameters.speedY = 0;
-        isGameOn = false;
         changeScore("right");
-        return;
+        isGameOn = false;
+        return false;
     }
-
     // вылетел ли мяч правее стены?
     if (ballParameters.posX + ballParameters.width > fieldParameters.width){
         ballParameters.speedX = 0;
         ballParameters.speedY = 0;
-        isGameOn = false;
         changeScore("left");
-        return;
+        isGameOn = false;
+        return false;
     }
-
     // вылетел ли мяч ниже стены?
     if (ballParameters.posY + ballParameters.height > fieldParameters.height){
         ballParameters.speedY =- ballParameters.speedY;
         ballParameters.posY = fieldParameters.height - ballParameters.height;
     }
-
     // вылетел ли мяч выше стены?
     if (ballParameters.posY < 0) {
         ballParameters.speedY =- ballParameters.speedY;
         ballParameters.posY = 0;
+    }
+}
+
+function changePositions(){
+    if (isGameOn){
+        ballParameters.posX += ballParameters.speedX;
+        ballParameters.posY += ballParameters.speedY;
+
+        racketsParameters.left.posY += racketsParameters.left.speedY;
+        racketsParameters.left.update();
+        racketsParameters.right.posY += racketsParameters.right.speedY;
+        racketsParameters.right.update();
+        checkStates();
     }
 
     ballParameters.update();
